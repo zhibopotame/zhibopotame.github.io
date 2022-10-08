@@ -9,9 +9,9 @@ After getting a pointcloud map with for example [LeGo-LOAM](https://github.com/R
 
 End results:
 
-<img width="600" height="400" src="media/hd_map_with_josm/pcl_map.png">
-<img width="300" height="200" src="media/hd_map_with_josm/lane1.png">
-<img width="300" height="200" src="media/hd_map_with_josm/lane2.png">
+<img width="600" height="400"  src="{{site.url}}/media/hd_map_with_josm/pcl_map.png" alt="PCL Map" style="margin-bottom:5px" >
+<img width="298" height="200" src="{{site.url}}/media/hd_map_with_josm/lane1.png" alt="pcl map with lane 1">
+<img width="298" height="200" src="{{site.url}}/media/hd_map_with_josm/lane2.png" alt="pcl map with lane 2">
 
 ## Prerequisite
 * [ROS1](https://www.ros.org/), tested with melodic & noetic
