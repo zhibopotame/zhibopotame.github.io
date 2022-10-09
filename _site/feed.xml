@@ -1,21 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-10-08T15:59:35+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zhibo Lin’s personal page</title><subtitle>Un incurable optimiste</subtitle><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 1</title><link href="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 1" /><published>2022-10-08T14:20:08+08:00</published><updated>2022-10-08T14:20:08+08:00</updated><id>http://localhost:4000/op/2022/10/08/hd_map_with_josm</id><content type="html" xml:base="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-10-09T09:44:37+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zhibo Lin’s home page</title><subtitle>Un incurable optimiste</subtitle><author><name>Zhibo Lin</name></author><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 1</title><link href="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 1" /><published>2022-10-08T14:20:08+08:00</published><updated>2022-10-08T14:20:08+08:00</updated><id>http://localhost:4000/op/2022/10/08/hd_map_with_josm</id><content type="html" xml:base="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;After getting a pointcloud map with for example &lt;a href=&quot;https://github.com/RobustFieldAutonomyLab/LeGO-LOAM&quot;&gt;LeGo-LOAM&lt;/a&gt; in rosbag file, load it to JOSM with real scale for easier lane map drawing.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;#1---convert-bag-to-pcd&quot;&gt;Convert bag to pcd&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2---convert-pcd-to-bt&quot;&gt;Convert pcd to bt&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3---convert-bt-to-pgm-map-file&quot;&gt;Convert bt to pgm map file&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4---visualization-in-josm&quot;&gt;Visualization in JOSM&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;p&gt;End results:&lt;/p&gt;
 
-&lt;p&gt;&lt;img width=&quot;600&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/pcl_map.png&quot; alt=&quot;PCL Map&quot; style=&quot;margin-bottom:5px&quot; /&gt;
-&lt;img width=&quot;298&quot; height=&quot;200&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/lane1.png&quot; alt=&quot;pcl map with lane 1&quot; /&gt;
-&lt;img width=&quot;298&quot; height=&quot;200&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/lane2.png&quot; alt=&quot;pcl map with lane 2&quot; /&gt;&lt;/p&gt;
+&lt;!-- &lt;img width=&quot;600&quot; height=&quot;400&quot;  src=&quot;http://localhost:4000/media/hd_map_with_josm/pcl_map.png&quot; alt=&quot;PCL Map&quot; style=&quot;margin-bottom:5px&quot; &gt; --&gt;
+&lt;p&gt;&lt;img width=&quot;600&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/lane1.png&quot; alt=&quot;pcl map with lane 1&quot; style=&quot;margin-bottom:5px&quot; /&gt;
+&lt;img width=&quot;600&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/lane2.png&quot; alt=&quot;pcl map with lane 2&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;prerequisite&quot;&gt;Prerequisite&lt;/h2&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.ros.org/&quot;&gt;ROS1&lt;/a&gt;, tested with melodic &amp;amp; noetic&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ros.org/&quot;&gt;ROS1&lt;/a&gt; tested with melodic &amp;amp; noetic&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://wiki.ros.org/pcl_ros&quot;&gt;pcl-ros&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://josm.openstreetmap.de&quot;&gt;JOSM&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/fzi-forschungszentrum-informatik/Lanelet2&quot;&gt;Lanelet2&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/youliangtan/3D_Slam_tools&quot;&gt;3D_Slam_tools&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;###&lt;/p&gt;</content><author><name></name></author><category term="OP" /><summary type="html">Summary After getting a pointcloud map with for example LeGo-LOAM in rosbag file, load it to JOSM with real scale for easier lane map drawing.</summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2022-10-08T13:45:08+08:00</published><updated>2022-10-08T13:45:08+08:00</updated><id>http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+&lt;h2 id=&quot;1---convert-bag-to-pcd&quot;&gt;1 - Convert bag to pcd&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;rosrun pcl_ros bag_to_pcd &amp;lt;file_in.bag&amp;gt; &amp;lt;topic&amp;gt; &amp;lt;output_directory&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;target_frame&amp;gt;]&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;2---convert-pcd-to-bt&quot;&gt;2 - Convert pcd to bt&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;roslaunch 3D_Slam_tools straightener.launch input_path:&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PATH/TO/PCD.pcd&quot;&lt;/span&gt; output_path:&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PATH/TO/OUTPUT.bt&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Use arrow key to adjust the map distortion if needed, ctrl-c to close and save to .bt file.&lt;/p&gt;
+
+&lt;h2 id=&quot;3---convert-bt-to-pgm-map-file&quot;&gt;3 - Convert bt to pgm map file&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;roslaunch 3D_Slam_tools octomap_mapping.launch path:&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PATH/TO/OUTPUT.bt&quot;&lt;/span&gt; z_min:&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-10&lt;/span&gt;  z_max:&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.5&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Setting a large &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;z_min&lt;/code&gt; allow the map to keep all the ground points which are very useful for creating lanes.&lt;/li&gt;
+  &lt;li&gt;Adjust &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;z_max&lt;/code&gt; to remove useless point clouds, like tree and building.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Run map_saver to save the map:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;rosrun map_server map_saver&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Example output:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;map.yaml&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;map.pgm&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;resolution&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.050000&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;-220.099997&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;-104.099997&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;-nan&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;negate&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;occupied_thresh&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.65&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;free_thresh&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;0.196&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;map.pgm&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img width=&quot;200&quot; height=&quot;300&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/map.png&quot; alt=&quot;map from pcl&quot; /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;4---visualization-in-josm&quot;&gt;4 - Visualization in JOSM&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Add PicLayer plugin in JOSM:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir -p ~/.josm/plugins
+open josm
+Edit -&amp;gt; Preferences -&amp;gt; Plugins click Download list, wait for the plugins list, check the PicLayer plugin checkbox, click update plugins
+checkout files in ~/.josm/plugins,  restart if needed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Convert pgm to png&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;convert map.pgm  &lt;span class=&quot;nt&quot;&gt;-fuzz&lt;/span&gt; 20% &lt;span class=&quot;nt&quot;&gt;-transparent&lt;/span&gt; white output.png&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;It becomes a rgba image with transparent background, very useful to overlay on satellite image.
+&lt;img width=&quot;200&quot; height=&quot;300&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/map_rgba.png&quot; alt=&quot;map_rbga from pcl&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Add png in JOSM&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img width=&quot;600&quot; height=&quot;300&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/josm_ui.png&quot; alt=&quot;josm_ui&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Imagery-&amp;gt;New picture layer from file... -&amp;gt; choose the previous output.png
+Imagery-&amp;gt;Mapbox Satellite, this is usually a good satellite image
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/josm_with_map.png&quot; alt=&quot;josm_map&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Save calibration, open .cal file, change &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INITIAL_SCALE&lt;/code&gt; value to 100* the resolution in map.yaml ( in map.pgm resolution=0.05 so 0.05*100 = 5.0)&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#JOSM PicLayer plugin calibration data&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#Wed Apr 28 13:10:02 CST 2021&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;POSITION_X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.3358406457062645E7
+&lt;span class=&quot;nv&quot;&gt;POSITION_Y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3539617.8704096507
+&lt;span class=&quot;nv&quot;&gt;INITIAL_SCALE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5.0  
+&lt;span class=&quot;nv&quot;&gt;M00&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.3857612552908848
+&lt;span class=&quot;nv&quot;&gt;M11&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.3857612552908848
+&lt;span class=&quot;nv&quot;&gt;M10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-0&lt;/span&gt;.922598641835333
+&lt;span class=&quot;nv&quot;&gt;M02&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;29.753357212335082
+&lt;span class=&quot;nv&quot;&gt;M01&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.922598641835333
+&lt;span class=&quot;nv&quot;&gt;M12&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;79.0004318155288&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Reload the png, the png will be at the right scale, follow step 2 and 3 in the previous picture to align (in step 2, you can put the order and opacity of layers that’s why a rgba image comes handy)&lt;/p&gt;
+
+&lt;p&gt;Result:
+&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/josm_map_overlay.png&quot; alt=&quot;josm_map_overlay&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;0---next&quot;&gt;0 - Next&lt;/h2&gt;
+
+&lt;p&gt;How to draw lane with josm, load it in RVIZ with Lanelets and planning with mission planner.&lt;/p&gt;
+
+&lt;p&gt;&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/planning_preview.gif&quot; alt=&quot;planning_preview&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="OP" /><summary type="html">Summary After getting a pointcloud map with for example LeGo-LOAM in rosbag file, load it to JOSM with real scale for easier lane map drawing.</summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2022-10-08T13:45:08+08:00</published><updated>2022-10-08T13:45:08+08:00</updated><id>http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
 
 &lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
 
@@ -27,4 +122,4 @@
 &lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="jekyll" /><category term="update" /><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
