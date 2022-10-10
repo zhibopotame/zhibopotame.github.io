@@ -1,4 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-10-09T09:44:37+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zhibo Lin’s home page</title><subtitle>Un incurable optimiste</subtitle><author><name>Zhibo Lin</name></author><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 1</title><link href="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 1" /><published>2022-10-08T14:20:08+08:00</published><updated>2022-10-08T14:20:08+08:00</updated><id>http://localhost:4000/op/2022/10/08/hd_map_with_josm</id><content type="html" xml:base="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-10-10T11:05:45+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zhibo Lin’s home page</title><subtitle>Un incurable optimiste</subtitle><author><name>Zhibo Lin</name></author><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 2</title><link href="http://localhost:4000/op/2022/10/09/hd_map_with_josm_part2.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 2" /><published>2022-10-09T14:12:00+08:00</published><updated>2022-10-09T14:12:00+08:00</updated><id>http://localhost:4000/op/2022/10/09/hd_map_with_josm_part2</id><content type="html" xml:base="http://localhost:4000/op/2022/10/09/hd_map_with_josm_part2.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;After successfully loaded a map file from pcl rosbag in JOSM, we’ll see how to draw a lane network, load it in Rviz with Lanelet2 and do global planning with mission planner.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;#1---install-lanelet2-plugin-in-josm&quot;&gt;Install Lanelet2 plugin in JOSM&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2---draw-lanes-in-josm&quot;&gt;Draw lanes in JOSM&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3---visualization-in-rviz&quot;&gt;Visualization in Rviz&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4---global-planning-demo&quot;&gt;Global planning demo&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;End results:&lt;/p&gt;
+
+&lt;p&gt;&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/planning_preview.gif&quot; alt=&quot;planning_preview&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;prerequisite&quot;&gt;Prerequisite&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ros.org/&quot;&gt;ROS1&lt;/a&gt; tested with melodic &amp;amp; noetic&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://josm.openstreetmap.de&quot;&gt;JOSM&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/zhibopotame/lanelet2_map_loader&quot;&gt;lanelet2_map_loader&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/zhibopotame/lanelet2_global_planner&quot;&gt;lanelet2_global_planner&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1---install-lanelet2-plugin-in-josm&quot;&gt;1 - Install Lanelet2 plugin in JOSM&lt;/h2&gt;
+&lt;p&gt;In &lt;a href=&quot;https://github.com/zhibopotame/lanelet2_map_loader&quot;&gt;lanelet2_map_loader&lt;/a&gt;-&amp;gt;Lanelet2-&amp;gt;lanelet2_maps-&amp;gt;josm, there are 3 files: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;laneletpresets.xml&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lanelets.mapcsss&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lines.mapcss&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Open JOSM&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Edit-&amp;gt;Preferences-&amp;gt;Map Settings -&amp;gt; Map Paint styles -&amp;gt; add (+) select &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lanelets.mapcss&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lines.mapcss&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Edit-&amp;gt;Preferences-&amp;gt;Map Settings -&amp;gt; Tagging Presets -&amp;gt; add (+) select &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;laneletpresets.xml&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img width=&quot;800&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/josm_plugin.png&quot; alt=&quot;josm_plugin&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;2---draw-lanes-in-josm&quot;&gt;2 - Draw lanes in JOSM&lt;/h2&gt;
+&lt;p&gt;Open JOSM and load your previous png file generated from rosbag, here for demo purpose:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;File-&amp;gt;New Layer&lt;/li&gt;
+  &lt;li&gt;Imagery-&amp;gt; New picture layer from file…  -&amp;gt;&lt;a href=&quot;https://github.com/zhibopotame/lanelet2_map_loader&quot;&gt;lanelet2_map_loader&lt;/a&gt;-&amp;gt;map_loader-&amp;gt;data-&amp;gt;map.png&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Follow these two videos to draw lanes on your map image:&lt;/p&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/3Yk8b8SB81o&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/em6H3DM63DM&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Example result:&lt;/p&gt;
+
+&lt;p&gt;Open JOSM&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;File-&amp;gt;New Layer&lt;/li&gt;
+  &lt;li&gt;Imagery-&amp;gt; New picture layer from file…  -&amp;gt;&lt;a href=&quot;https://github.com/zhibopotame/lanelet2_map_loader&quot;&gt;lanelet2_map_loader&lt;/a&gt;-&amp;gt;map_loader-&amp;gt;data-&amp;gt;map.png&lt;/li&gt;
+  &lt;li&gt;File-&amp;gt;Open-&amp;gt;&lt;a href=&quot;https://github.com/zhibopotame/lanelet2_map_loader&quot;&gt;lanelet2_map_loader&lt;/a&gt;-&amp;gt;map_loader-&amp;gt;data-&amp;gt;hs_pcl.png&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img width=&quot;800&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/josm_with_lanes.png&quot; alt=&quot;josm_with_lanes&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;3---visualization-in-rviz&quot;&gt;3 - Visualization in Rviz&lt;/h2&gt;
+&lt;p&gt;After generating your own .osm file, in map_loader/launch/lanelet2_map_loader.launch, modify&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;L1 &lt;span class=&quot;nt&quot;&gt;&amp;lt;arg&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;file_name&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;default=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$(find map_loader)/data/hs_pcl.osm&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+L5 &lt;span class=&quot;nt&quot;&gt;&amp;lt;arg&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pointcloud_map_path&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;default = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$(find map_loader)/data/ds.pcd&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+L6 &lt;span class=&quot;nt&quot;&gt;&amp;lt;arg&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pcl_grid_map&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;default = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$(find map_loader)/data/map.yaml&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;roslaunch map_loader lanelet2_map_loader.launch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check pointcloud2 to see your pcd file.
+&lt;img width=&quot;800&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/rviz_with_lanes.png&quot; alt=&quot;rviz_with_lanes&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;4---global-planning-demo&quot;&gt;4 - Global planning demo&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;roslaunch mission_planner mission_planning.launch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2D Nav Goal&lt;/code&gt; to send goal&lt;/li&gt;
+  &lt;li&gt;use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2D Pose Estimate&lt;/code&gt; to modify start position&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can play with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;path_resolution&lt;/code&gt; in mission_planning.launch to smooth out the global path.&lt;/p&gt;
+
+&lt;p&gt;&lt;img width=&quot;800&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/rviz_mission_planner.gif&quot; alt=&quot;rviz_mission_planner&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="OP" /><summary type="html">Summary After successfully loaded a map file from pcl rosbag in JOSM, we’ll see how to draw a lane network, load it in Rviz with Lanelet2 and do global planning with mission planner.</summary></entry><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 1</title><link href="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 1" /><published>2022-10-08T14:20:08+08:00</published><updated>2022-10-08T14:20:08+08:00</updated><id>http://localhost:4000/op/2022/10/08/hd_map_with_josm</id><content type="html" xml:base="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;After getting a pointcloud map with for example &lt;a href=&quot;https://github.com/RobustFieldAutonomyLab/LeGO-LOAM&quot;&gt;LeGo-LOAM&lt;/a&gt; in rosbag file, load it to JOSM with real scale for easier lane map drawing.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -110,16 +190,4 @@ Imagery-&amp;gt;Mapbox Satellite, this is usually a good satellite image
 
 &lt;p&gt;How to draw lane with josm, load it in RVIZ with Lanelets and planning with mission planner.&lt;/p&gt;
 
-&lt;p&gt;&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/planning_preview.gif&quot; alt=&quot;planning_preview&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="OP" /><summary type="html">Summary After getting a pointcloud map with for example LeGo-LOAM in rosbag file, load it to JOSM with real scale for easier lane map drawing.</summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2022-10-08T13:45:08+08:00</published><updated>2022-10-08T13:45:08+08:00</updated><id>http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2022/10/08/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
-
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
-
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="jekyll" /><category term="update" /><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+&lt;p&gt;&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/planning_preview.gif&quot; alt=&quot;planning_preview&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="OP" /><summary type="html">Summary After getting a pointcloud map with for example LeGo-LOAM in rosbag file, load it to JOSM with real scale for easier lane map drawing.</summary></entry></feed>
