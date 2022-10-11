@@ -2,7 +2,7 @@
 layout: post
 title:  "HD map with JOSM & Lanelet2 - part 2"
 date:   2022-10-09 14:12:00 +0800
-categories: OP
+categories: TECH
 ---
 
 ## Summary

@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-10-10T11:05:45+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zhibo Lin’s home page</title><subtitle>Un incurable optimiste</subtitle><author><name>Zhibo Lin</name></author><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 2</title><link href="http://localhost:4000/op/2022/10/09/hd_map_with_josm_part2.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 2" /><published>2022-10-09T14:12:00+08:00</published><updated>2022-10-09T14:12:00+08:00</updated><id>http://localhost:4000/op/2022/10/09/hd_map_with_josm_part2</id><content type="html" xml:base="http://localhost:4000/op/2022/10/09/hd_map_with_josm_part2.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-10-11T13:52:12+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zhibo Lin’s home page</title><subtitle>un pessimiste mal informé</subtitle><author><name>Zhibo Lin</name></author><entry><title type="html">On Ubuntu, play sound files on PS4 joystick</title><link href="http://localhost:4000/tech/2022/10/10/ps4_joystick.html" rel="alternate" type="text/html" title="On Ubuntu, play sound files on PS4 joystick" /><published>2022-10-10T11:12:00+08:00</published><updated>2022-10-10T11:12:00+08:00</updated><id>http://localhost:4000/tech/2022/10/10/ps4_joystick</id><content type="html" xml:base="http://localhost:4000/tech/2022/10/10/ps4_joystick.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;Sometime it can be handy while remote controlling, you can get an update on the current state, like voice indication or by lights.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;#1---connect-your-joystick-to-ubuntu&quot;&gt;Connect your joystick to Ubuntu&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2---prepare-your-sound-file&quot;&gt;Prepare your sound file&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3---play-the-sound-file&quot;&gt;Play the sound file&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4---global-planning-demo&quot;&gt;Global planning demo&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;prerequisite&quot;&gt;Prerequisite&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ros.org/&quot;&gt;ROS1&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/ros-drivers/joystick_drivers&quot;&gt;ros-joystick_drivers&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;example code: &lt;a href=&quot;https://github.com/zhibopotame/ps4_joystick_sound_player&quot;&gt;ps4_joystick_sound_player&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1---connect-your-joystick-to-ubuntu&quot;&gt;1 - Connect your joystick to Ubuntu&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Pairing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img width=&quot;500&quot; height=&quot;300&quot; src=&quot;http://localhost:4000/media/ps4_joystick/ds_1.jpg&quot; alt=&quot;ds_1&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;In Ubuntu Bluetooth settings, add new device&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img width=&quot;500&quot; height=&quot;300&quot; src=&quot;http://localhost:4000/media/ps4_joystick/bluetooth.png&quot; alt=&quot;bluetooth&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Test&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;rosrun joy joy_node 
+rostopic &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; /joy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;2---prepare-your-sound-file&quot;&gt;2 - Prepare your sound file&lt;/h2&gt;
+&lt;p&gt;Convert &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mp3&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sbc&lt;/code&gt; file&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gst-launch-1.0 -q filesrc location=INPUT.mp3 ! decodebin ! audioconvert ! audiosample ! sbcenc ! &quot;audio/x-sbc,rate=32000,channels=2,channel-mode=dual,blocks=16subbands=8,allocation-method=loudness,bitpool=25&quot; ! queque ! filesink location=OUTPUT.sbc sync=false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;3---play-the-sound-file&quot;&gt;3 - Play the sound file&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Udev permission&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;in &lt;a href=&quot;https://github.com/zhibopotame/ps4_joystick_sound_player&quot;&gt;ps4_joystick_sound_player&lt;/a&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo cp &lt;/span&gt;cfg/99-hidraw-permissions.rules /etc/udev/rules.d&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;If your username is not in dialout group, add to it&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;adduser USERNAME dialout&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Demo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;roslaunch ps4_joystick_sound_player joy_sound_player.launch &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;4---change-joysticks-light-color&quot;&gt;4 - Change joystick’s light color&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/zhibopotame/ps4_joystick_sound_player/blob/master/src/joy_sound_player.cpp#L159&quot;&gt;joy_sound_player.cpp&lt;/a&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JoySoundPlayer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;play_sound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SBCFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RGB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;volume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){...}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>Zhibo Lin</name></author><category term="TECH" /><summary type="html">Summary Sometime it can be handy while remote controlling, you can get an update on the current state, like voice indication or by lights.</summary></entry><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 2</title><link href="http://localhost:4000/tech/2022/10/09/hd_map_with_josm_part2.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 2" /><published>2022-10-09T14:12:00+08:00</published><updated>2022-10-09T14:12:00+08:00</updated><id>http://localhost:4000/tech/2022/10/09/hd_map_with_josm_part2</id><content type="html" xml:base="http://localhost:4000/tech/2022/10/09/hd_map_with_josm_part2.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;After successfully loaded a map file from pcl rosbag in JOSM, we’ll see how to draw a lane network, load it in Rviz with Lanelet2 and do global planning with mission planner.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -78,7 +145,7 @@ L6 &lt;span class=&quot;nt&quot;&gt;&amp;lt;arg&lt;/span&gt; &lt;span class=&quo
 
 &lt;p&gt;You can play with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;path_resolution&lt;/code&gt; in mission_planning.launch to smooth out the global path.&lt;/p&gt;
 
-&lt;p&gt;&lt;img width=&quot;800&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/rviz_mission_planner.gif&quot; alt=&quot;rviz_mission_planner&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="OP" /><summary type="html">Summary After successfully loaded a map file from pcl rosbag in JOSM, we’ll see how to draw a lane network, load it in Rviz with Lanelet2 and do global planning with mission planner.</summary></entry><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 1</title><link href="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 1" /><published>2022-10-08T14:20:08+08:00</published><updated>2022-10-08T14:20:08+08:00</updated><id>http://localhost:4000/op/2022/10/08/hd_map_with_josm</id><content type="html" xml:base="http://localhost:4000/op/2022/10/08/hd_map_with_josm.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;&lt;img width=&quot;800&quot; height=&quot;400&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/rviz_mission_planner.gif&quot; alt=&quot;rviz_mission_planner&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="TECH" /><summary type="html">Summary After successfully loaded a map file from pcl rosbag in JOSM, we’ll see how to draw a lane network, load it in Rviz with Lanelet2 and do global planning with mission planner.</summary></entry><entry><title type="html">HD map with JOSM &amp;amp; Lanelet2 - part 1</title><link href="http://localhost:4000/tech/2022/10/08/hd_map_with_josm.html" rel="alternate" type="text/html" title="HD map with JOSM &amp;amp; Lanelet2 - part 1" /><published>2022-10-08T14:20:08+08:00</published><updated>2022-10-08T14:20:08+08:00</updated><id>http://localhost:4000/tech/2022/10/08/hd_map_with_josm</id><content type="html" xml:base="http://localhost:4000/tech/2022/10/08/hd_map_with_josm.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;After getting a pointcloud map with for example &lt;a href=&quot;https://github.com/RobustFieldAutonomyLab/LeGO-LOAM&quot;&gt;LeGo-LOAM&lt;/a&gt; in rosbag file, load it to JOSM with real scale for easier lane map drawing.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -190,4 +257,4 @@ Imagery-&amp;gt;Mapbox Satellite, this is usually a good satellite image
 
 &lt;p&gt;How to draw lane with josm, load it in RVIZ with Lanelets and planning with mission planner.&lt;/p&gt;
 
-&lt;p&gt;&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/planning_preview.gif&quot; alt=&quot;planning_preview&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="OP" /><summary type="html">Summary After getting a pointcloud map with for example LeGo-LOAM in rosbag file, load it to JOSM with real scale for easier lane map drawing.</summary></entry></feed>
+&lt;p&gt;&lt;img width=&quot;1000&quot; height=&quot;500&quot; src=&quot;http://localhost:4000/media/hd_map_with_josm/planning_preview.gif&quot; alt=&quot;planning_preview&quot; /&gt;&lt;/p&gt;</content><author><name>Zhibo Lin</name></author><category term="TECH" /><summary type="html">Summary After getting a pointcloud map with for example LeGo-LOAM in rosbag file, load it to JOSM with real scale for easier lane map drawing.</summary></entry></feed>

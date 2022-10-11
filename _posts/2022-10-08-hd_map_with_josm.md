@@ -2,7 +2,7 @@
 layout: post
 title:  "HD map with JOSM & Lanelet2 - part 1"
 date:   2022-10-08 14:20:08 +0800
-categories: OP
+categories: TECH
 ---
 ## Summary
 After getting a pointcloud map with for example [LeGo-LOAM](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM) in rosbag file, load it to JOSM with real scale for easier lane map drawing.
