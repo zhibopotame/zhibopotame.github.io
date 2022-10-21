@@ -53,3 +53,7 @@ Gmapping with [`Kobuki`](http://kobuki.yujinrobot.com/about2/) base + Teraranger
 
 ## 2015
 * Playing with Gmapping, AMCL, DWA
+
+## 2014 University project
+* Drone competition
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cmsV_88a5CM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
