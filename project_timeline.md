@@ -3,7 +3,7 @@ layout: page
 title: Projects
 permalink: /timeline/
 ---
-** will be completed gradually ** 
+** will be completed progressively ** 
 
 <!-- ## TImeline
 * [2022](#2022)
@@ -14,6 +14,10 @@ permalink: /timeline/
 * [2017](#2017)
 * [2016](#2016)
 * [2015](#2015) -->
+## 2022
+* Parking Valet: [Gridmap](https://github.com/ANYbotics/grid_map) + [OMPL](https://github.com/ompl/ompl) + purepursuit
+
+    <img width="720" height="650" src="{{site.url}}/media/project_timeline/parking.gif" alt="parking">
 ## 2021
 * [`Code`](https://github.com/linzhibo/Cyberdog_utils) - Some utils for Xiaomi's Cyberdog
     * Using Baidu's text to speech API to generate custom sound files to be play on Cyberdog
